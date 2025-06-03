@@ -17,7 +17,7 @@ export default withAuth(
 
     // если пользователь не админ, редиректим
     if (req.nextUrl.pathname.startsWith("/admin") && role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
 
     return NextResponse.next();
