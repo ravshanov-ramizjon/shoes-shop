@@ -127,7 +127,7 @@ export function Header() {
                 <Menu className="w-5 h-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0f0f0f] text-white border-b border-[#1a1a1a] p-5">
+            <SheetContent side="right" className="bg-gray-900 text-white border-b border-[#1a1a1a] p-5">
               <DialogHeader className="hidden">
                 <DialogTitle>Меню</DialogTitle>
                 <DialogDescription></DialogDescription>

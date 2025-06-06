@@ -163,7 +163,7 @@ export default function OrdersPage() {
 
          
               <div className="space-y-2 text-sm">
-                {order.items.map((item) => (
+                {!order.items || order.items.map((item) => (
                   <div
                     key={item.id}
                     className="flex justify-between items-center border-b border-zinc-700 pb-1"

@@ -40,7 +40,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     e.stopPropagation()
 
     if (!session?.user?.email) {
-      toast.error("Пожалуйста, войдите в систему для покупки")
+      toast.error("Пожалуйста, зарегистрируйтес или войдите в свой аккаунт для покупки")
       return
     }
 
