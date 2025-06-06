@@ -121,3 +121,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.text-neon {
+  color: #00f0ff;
+  text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
+
+  
+}
+
+.hover\:text-neon:hover {
+  color: #00f0ff;
+  text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
+}

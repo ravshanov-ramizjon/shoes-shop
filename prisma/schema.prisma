@@ -104,6 +104,7 @@ enum OrderStatus {
   PENDING
   PROCESSED
   COMPLETED
+  CANCELED
 }
 
 enum PaymentMethod {
@@ -114,4 +115,5 @@ enum PaymentMethod {
 enum Role {
   USER
   ADMIN
+  BLOCK
 }

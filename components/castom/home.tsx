@@ -31,7 +31,6 @@ export function HomePage({ categories, products }: HomePageProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Фильтрация по категории и поиску
   const filteredProducts = products.filter((product) => {
     const matchesCategory = selectedCategory ? product.category.id === selectedCategory : true;
     const matchesSearch =
@@ -41,40 +40,41 @@ export function HomePage({ categories, products }: HomePageProps) {
   });
 
   return (
-    <main className="bg-white min-h-screen p-8 max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-        <h1 className="text-4xl font-extrabold text-gray-900 tracking-wide drop-shadow-md">
-          Обувь магазин
-        </h1>
+    <div className="bg-gray-900">
+      <main className=" min-h-screen p-8 max-w-7xl mx-auto text-white font-mono select-none">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+          <h1 className="text-5xl font-extrabold tracking-wide text-cyan-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.7)]">
+            Обувь маркет
+          </h1>
 
-        <Input
-          type="search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Поиск товаров..."
-          className="border border-gray-300 rounded-lg px-4 py-2 text-sm w-full sm:w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <Input
+            type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Поиск товаров..."
+            className="border border-cyan-600 rounded-lg px-4 py-2 text-sm w-full sm:w-72 bg-gray-800 text-cyan-300 placeholder-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:shadow-[0_0_10px_rgba(6,182,212,0.8)] transition"
+          />
+        </div>
+
+        <CategoryFilter
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
         />
-      </div>
 
-      {/* Фильтр по категориям */}
-      <CategoryFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-      />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-6">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
 
-      {/* Карточки товаров */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+          {filteredProducts.length === 0 && (
+            <p className="text-center col-span-full text-cyan-400 text-lg tracking-wide drop-shadow-[0_0_6px_rgba(6,182,212,0.6)]">
+              Ничего не найдено.
+            </p>
+          )}
+        </div>
+      </main>
+    </div>
 
-        {filteredProducts.length === 0 && (
-          <p className="text-center col-span-full text-gray-500 text-lg">
-            Ничего не найдено.
-          </p>
-        )}
-      </div>
-    </main>
   );
 }

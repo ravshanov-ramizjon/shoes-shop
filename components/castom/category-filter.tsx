@@ -10,10 +10,10 @@ interface CategoryFilterProps {
 
 export function CategoryFilter({ categories, selectedCategory, onSelectCategory }: CategoryFilterProps) {
   return (
-    <div className="flex flex-wrap gap-3 mb-10">
+    <div className="flex flex-wrap gap-4 mb-12">
       <Button
         variant={selectedCategory === undefined ? "default" : "outline"}
-        className="bg-black text-white hover:-translate-y-px transition-colors duration-300"
+        className="bg-transparent border-cyan-400 text-cyan-400 hover:bg-cyan-500 hover:text-black hover:drop-shadow-[0_0_15px_cyan] transition-transform duration-300 hover:-translate-y-1"
         onClick={() => onSelectCategory?.(undefined)}
       >
         Все категории
@@ -22,7 +22,9 @@ export function CategoryFilter({ categories, selectedCategory, onSelectCategory 
         <Button
           key={category.id}
           variant={selectedCategory === category.id ? "default" : "outline"}
-          className="bg-black text-white hover:-translate-y-px transition-colors duration-300"
+          className={`bg-transparent border-cyan-400 text-cyan-400 hover:bg-cyan-500 hover:text-black hover:drop-shadow-[0_0_15px_cyan] transition-transform duration-300 hover:-translate-y-1
+            ${selectedCategory === category.id ? "bg-cyan-500 text-black drop-shadow-[0_0_20px_cyan]" : ""}
+          `}
           onClick={() => onSelectCategory?.(category.id)}
         >
           {category.name}

@@ -12,10 +12,24 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID ?? "",
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -54,7 +68,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id
         token.email = user.email ?? ""
         token.name = user.name ?? ""
-        token.role = user.role // 👈 ЭТО ВАЖНО
+        token.role = user.role 
       }
       return token
     },
@@ -63,7 +77,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string
         session.user.email = token.email as string
         session.user.name = token.name as string
-        session.user.role = token.role as string // 👈 И ЭТО
+        session.user.role = token.role as string 
       }
       return session
     },

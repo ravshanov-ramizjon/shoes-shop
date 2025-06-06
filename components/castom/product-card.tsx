@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface ProductCardProps {
   product: {
@@ -33,13 +34,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
   const handleCardClick = () => {
     router.push(`/product/${product.id}`)
-  }
+  } 
 
   const handleBuy = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    
+
     if (!session?.user?.email) {
-      alert("Вы должны войти в систему")
+      toast.error("Пожалуйста, войдите в систему для покупки")
       return
     }
 
@@ -49,13 +50,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     const data = await res.json()
 
     if (!res.ok) {
-      alert("Ошибка при получении пользователя")
+      toast("Ошибка при получении пользователя")
       return
     }
 
     const userId = data.userId
 
-    if (isInCart) return // Не добавлять повторно
+    if (isInCart) return
 
     const cartItem = {
       id: product.id,
@@ -82,33 +83,43 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card
       onClick={handleCardClick}
-      className="transition-shadow hover:shadow-xl bg-white flex flex-col border-0">
+      className="transition-shadow hover:shadow-[0_0_20px_cyan] bg-gray-900 flex flex-col border border-cyan-400 rounded-lg cursor-pointer text-cyan-300 hover:text-white"
+    >
       <CardHeader className="p-0 px-5">
-        <div className="relative w-full h-50">
+        <div className="relative w-full h-62 rounded-t-lg overflow-hidden">
           <Image
             src={product.image}
             alt={product.name}
             width={400}
-            height={200}
-            className="object-cover object-center rounded-t-lg h-50"
+            height={208}
+            className="object-cover h-full object-center transition-transform duration-300 hover:scale-105"
           />
         </div>
       </CardHeader>
 
       <CardContent className="flex flex-col flex-grow p-4">
-        <CardTitle className="text-lg font-semibold text-gray-900">
+        <CardTitle className="text-xl font-bold drop-shadow-[0_0_8px_cyan]">
           {product.name}
         </CardTitle>
-        <CardDescription className="text-gray-600 text-sm mt-1 flex-grow">
+        <CardDescription className="text-cyan-400 text-sm mt-1 flex-grow">
           {product.description}
         </CardDescription>
       </CardContent>
 
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
-        <span className="text-black font-bold text-lg">
+        <span className="font-bold text-lg drop-shadow-[0_0_8px_cyan]">
           ${product.price.toFixed(2)}
         </span>
-        <Button variant="default" onClick={handleBuy} disabled={isInCart}>
+        <Button
+          variant="default"
+          onClick={handleBuy}
+          disabled={isInCart}
+          className={`bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_cyan] ${
+            isInCart
+              ? "opacity-60 cursor-not-allowed"
+              : "hover:shadow-[0_0_25px_cyan] transition"
+          }`}
+        >
           {isInCart ? "В корзине" : "Купить"}
         </Button>
       </CardFooter>

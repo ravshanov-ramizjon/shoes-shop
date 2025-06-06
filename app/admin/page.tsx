@@ -2,16 +2,32 @@ import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import { authOptions } from "@/lib/authOptions"
 import { prisma } from "@/lib/prisma"
-type OrderStatus = "PENDING" | "PROCESSED" | "COMPLETED"
+import {
+  FiUser,
+  FiPhone,
+  FiMail,
+  FiBox,
+  FiArrowRightCircle,
+  FiCalendar,
+} from "react-icons/fi"
 import Link from "next/link"
+
+type OrderStatus = "PENDING" | "PROCESSED" | "COMPLETED"
 
 export default async function AdminOrdersPage() {
   const session = await getServerSession(authOptions)
 
-  // // 🛡 Только для админов
-  // if (!session?.user || session.user.role !== "ADMIN") {
-  //   redirect("/")
-  // }
+  if (!session?.user?.email) {
+    redirect("/")
+  }
+
+  const currentUser = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  })
+
+  if (!currentUser || currentUser.role !== "ADMIN") {
+    redirect("/")
+  }
 
   const orders = (await prisma.order.findMany({
     include: {
@@ -19,56 +35,91 @@ export default async function AdminOrdersPage() {
       user: true,
     },
     orderBy: { createdAt: "desc" },
-  })).map((order: { id: string; createdAt: Date; status: OrderStatus; name: string; phone: string; user: { email: string | null } | null; items: { id: string; name: string; quantity: number; price: number }[] }) => ({
+  })).map((order) => ({
     ...order,
     createdAt: order.createdAt.toISOString(),
-  })) as {
-    id: string
-    createdAt: string
-    status: OrderStatus
-    name: string
-    phone: string
-    user: { email: string | null } | null
-    items: { id: string; name: string; quantity: number; price: number }[]
-  }[]
+  }))
 
   return (
-    <main className="p-6 max-w-5xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold">Все заказы</h1>
-
-      {orders.map((order) => (
-        <div
-          key={order.id}
-          className="border rounded-lg p-4 shadow-sm space-y-2"
-        >
-          <p className="text-sm text-muted-foreground">
-            Заказ от {new Date(order.createdAt).toLocaleDateString("ru-RU")} |{" "}
-            Статус:{" "}
-            <strong className="uppercase text-blue-700">{order.status}</strong>
-          </p>
-          <p className="text-sm">
-            Клиент: <strong>{order.name}</strong> | Тел: {order.phone}
-          </p>
-          <p className="text-sm">Email: {order.user?.email ?? "Гость"}</p>
-
-          <ul className="text-sm pl-4 list-disc">
-            {order.items.map((item) => (
-              <li key={item.id}>
-                {item.name} × {item.quantity} = {item.price * item.quantity} сум
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex items-center gap-2 mt-2">
-            <Link
-              href={`/admin/orders/${order.id}`}
-              className="text-sm underline text-blue-600"
-            >
-              Изменить статус
-            </Link>
+    <div className="bg-gray-900">
+    <main className="p-6 max-w-6xl mx-auto space-y-8">
+    <h1 className="text-4xl font-bold text-cyan-400 drop-shadow-[0_0_10px_cyan] flex items-center gap-3">
+      <FiBox className="text-cyan-500" />
+      Все заказы
+    </h1>
+  
+    {orders.map((order) => (
+      <div
+        key={order.id}
+        className="bg-[#0f0f0f] border border-cyan-600 rounded-xl p-6 shadow-[0_0_15px_#00FFFF40] transition-all duration-300 hover:shadow-[0_0_25px_cyan] hover:scale-[1.01]"
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-cyan-300 flex items-center gap-1">
+              <FiCalendar className="text-cyan-500" />
+              {new Date(order.createdAt).toLocaleDateString("ru-RU")}
+            </p>
+            <p className="text-base text-white font-semibold mt-1">
+              Статус:{" "}
+              <span
+                className={`px-2 py-1 rounded-md text-xs font-bold uppercase shadow-[0_0_6px_#00FFFF] 
+                  ${
+                    order.status === "COMPLETED"
+                      ? "bg-green-500 text-white"
+                      : order.status === "PROCESSED"
+                      ? "bg-yellow-400 text-black"
+                      : order.status === "CANCELED"
+                      ? "bg-red-600 text-white"
+                      : "bg-blue-600 text-white"
+                  }`}
+              >
+                {order.status}
+              </span>
+            </p>
           </div>
+  
+          <Link
+            href={`/admin/orders/${order.id}`}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg transition shadow-[0_0_10px_cyan] hover:shadow-[0_0_15px_cyan]"
+          >
+            Изменить статус <FiArrowRightCircle />
+          </Link>
         </div>
-      ))}
-    </main>
+  
+        <div className="mt-4 text-sm text-cyan-300 space-y-1">
+          <p className="flex items-center gap-2">
+            <FiUser /> <strong className="text-white">{order.name}</strong>
+          </p>
+          <Link
+            href={`tel:${order.phone}`}
+            className="flex items-center gap-2 hover:text-white transition"
+          >
+            <FiPhone /> {order.phone}
+          </Link>
+          <Link
+            href={`mailto:${order.user?.email}`}
+            className="flex items-center gap-2 hover:text-white transition"
+          >
+            <FiMail /> {order.user?.email ?? "Гость"}
+          </Link>
+        </div>
+  
+        <ul className="mt-4 text-sm text-cyan-200 pl-5 list-disc space-y-1">
+          {order.items.map((item) => (
+            <li key={item.id} className="flex justify-between">
+              <span>
+                {item.name} × {item.quantity}
+              </span>
+              <span className="font-semibold text-white">
+                {item.price * item.quantity} сум
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </main>
+    </div>
+  
   )
 }
