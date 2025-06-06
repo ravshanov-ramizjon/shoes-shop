@@ -152,7 +152,7 @@ export function Header() {
                 )}
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger><MdOutlinePersonOutline className="text-sm text-white hover:text-neon transition " size={20} /> Account</DropdownMenuTrigger>
+                  <DropdownMenuTrigger className="flex items-center gap-1"><MdOutlinePersonOutline className=" text-white hover:text-neon transition " size={20} /> Account</DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-gray-900 text-white border-0">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
