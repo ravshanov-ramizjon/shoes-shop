@@ -4,18 +4,25 @@ import bcrypt from "bcrypt";
 const db = new PrismaClient();
 
 async function main() {
+  // Очищаем старые данные
+  await db.product.deleteMany();
+  await db.user.deleteMany();
+  await db.category.deleteMany();
+
+  // Создаём категории с уникальными ID
   const men = await db.category.create({
-    data: { name: "Мужская обувь" },
+    data: { id: "men", name: "Мужская обувь" },
   });
 
   const women = await db.category.create({
-    data: { name: "Женская обувь" },
+    data: { id: "women", name: "Женская обувь" },
   });
 
   const kids = await db.category.create({
-    data: { name: "Детская обувь" },
+    data: { id: "kids", name: "Детская обувь" },
   });
 
+  // Товары
   await db.product.createMany({
     data: [
       {
@@ -42,6 +49,7 @@ async function main() {
     ],
   });
 
+  // Пользователи
   const users = [
     {
       name: "Иван Иванов",
@@ -66,9 +74,9 @@ async function main() {
 }
 
 main()
-  .then(() => console.log("Seeding complete"))
+  .then(() => console.log("✅ Seeding complete"))
   .catch((e) => {
-    console.error(e);
+    console.error("❌ Error during seed:", e);
     process.exit(1);
   })
   .finally(async () => {

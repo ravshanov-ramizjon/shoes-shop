@@ -133,3 +133,40 @@
   color: #00f0ff;
   text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
 }
+
+.neon-text {
+  text-shadow:
+    0 0 5px #22d3ee,
+    0 0 10px #22d3ee,
+    0 0 20px #22d3ee,
+    0 0 40px #0ea5e9;
+}
+.neon-glow {
+  box-shadow:
+    0 0 5px #22d3ee,
+    0 0 15px #22d3ee,
+    0 0 30px #0ea5e9;
+}
+.neon-button {
+  text-shadow:
+    0 0 4px #22d3ee,
+    0 0 10px #0ea5e9;
+  box-shadow:
+    0 0 8px #22d3ee,
+    0 0 20px #0ea5e9;
+  transition: box-shadow 0.3s ease;
+}
+.neon-button:hover {
+  box-shadow:
+    0 0 12px #22d3ee,
+    0 0 30px #0ea5e9;
+}
+.shadow-neon {
+  box-shadow:
+    0 0 4px #22d3ee;
+}
+.shadow-neon-glow {
+  box-shadow:
+    0 0 8px #22d3ee,
+    0 0 20px #0ea5e9;
+}

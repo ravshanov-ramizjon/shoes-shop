@@ -30,19 +30,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MdOutlinePersonOutline } from "react-icons/md";
+import Image from "next/image"
+import { useSyncUserRole } from "@/hooks/useSyncUserRole"
 
 
 export function Header() {
+  useSyncUserRole();
+
   const { data: session } = useSession()
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  console.log("Is admin:", session?.user.role)
 
   useEffect(() => {
     const checkAdmin = async () => {
-
-      setIsAdmin(session?.user.role ? true : false)
-      console.log("User role:", session)
+      setIsAdmin(session?.user.role === "ADMIN")
+      console.log("User role:", session?.user.role)
     }
     if (session) checkAdmin()
   }, [session])
@@ -53,7 +57,7 @@ export function Header() {
     { href: "/orders", label: "Мои заказы", icon: PackageCheck, authOnly: true },
     { href: "/admin", label: "Админ", icon: ShieldCheck, authOnly: true, adminOnly: true },
   ]
-
+  console.log("Session in header:", session?.user.image)
   const isActive = (href: string) => pathname === href
 
   return (
@@ -81,7 +85,23 @@ export function Header() {
               )
           )}
           <DropdownMenu>
-            <DropdownMenuTrigger><MdOutlinePersonOutline className="flex items-center gap-2 text-sm text-gray-400 hover:text-neon transition " size={27} /></DropdownMenuTrigger>
+            <DropdownMenuTrigger>
+              {
+                session?.user.image ? (
+                  <Image
+                    src={session?.user.image}
+                    alt={session?.user.name || "User Avatar"}
+                    width={32}
+                    height={32}
+                    className="rounded-full mr-2 object-cover hover:scale-105 transition-transform cursor-pointer"
+                  />
+                ) : (
+                  <MdOutlinePersonOutline
+                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-neon transition"
+                    size={27} />
+                )
+              }
+            </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-gray-900 text-white border-0">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -152,7 +172,25 @@ export function Header() {
                 )}
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-1"><MdOutlinePersonOutline className=" text-white hover:text-neon transition " size={20} /> Account</DropdownMenuTrigger>
+                  <DropdownMenuTrigger>
+                    {
+                      session?.user.image ? (
+                        <Image
+                          src={session?.user.image}
+                          alt={session?.user.name || "User Avatar"}
+                          width={32}
+                          height={32}
+                          className="rounded-full mr-2 object-cover hover:scale-105 transition-transform cursor-pointer"
+                        />
+                      ) : (
+                        <div className="flex items-center gap-1 text-white hover:text-neon transition">
+                          <MdOutlinePersonOutline
+                            className="flex items-center gap-2 text-sm hover:text-neon transition"
+                            size={20} /> Account
+                        </div>
+                      )
+                    }
+                  </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-gray-900 text-white border-0">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />

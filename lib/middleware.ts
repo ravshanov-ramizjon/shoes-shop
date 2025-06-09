@@ -16,7 +16,7 @@ export default withAuth(
     const role = token?.role;
 
     // если пользователь не админ, редиректим
-    if (req.nextUrl.pathname.startsWith("/admin") && role !== "admin") {
+    if (req.nextUrl.pathname.startsWith("/admin") && role !== "ADMIN") {
       return NextResponse.redirect(new URL("/", req.url));
     }
 
@@ -33,5 +33,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin/:path*", "/orders/:path*",],
+  matcher: ["/admin/:path*",],
 };

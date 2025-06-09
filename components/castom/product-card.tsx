@@ -83,9 +83,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card
       onClick={handleCardClick}
-      className="transition-shadow hover:shadow-[0_0_20px_cyan] bg-gray-900 flex flex-col border border-cyan-400 rounded-lg cursor-pointer text-cyan-300 hover:text-white"
+      className="transition-shadow hover:shadow-[0_0_20px_cyan] bg-gray-900 flex flex-col border-none rounded-lg cursor-pointer text-cyan-300 hover:text-white p-0"
     >
-      <CardHeader className="p-0 px-5">
+      <CardHeader className="p-0">
         <div className="relative w-full h-62 rounded-t-lg overflow-hidden">
           <Image
             src={product.image}
