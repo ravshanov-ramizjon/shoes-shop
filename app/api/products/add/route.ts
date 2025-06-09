@@ -5,7 +5,7 @@ export async function POST(req: Request) {
   try {
     const { name, price, image, description, category } = await req.json()
 
-    if (!name || !image || !description || !price || !category || isNaN(parseFloat(price))) {
+    if (!name || !image || !description || !price || !category) {
       return NextResponse.json({ error: 'Неверные или пустые поля' }, { status: 400 })
     }
 

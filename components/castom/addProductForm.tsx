@@ -70,7 +70,7 @@ export default function AddProductForm({ open, onClose, onSuccess }: Props) {
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">
             Добавить товар
-          </DialogTitle>
+          </DialogTitle> 
         </DialogHeader>
         <div className="mt-6 space-y-6 sm:space-y-8">
           <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-4 sm:space-y-0">
