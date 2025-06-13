@@ -40,7 +40,7 @@ export default function OrdersPage() {
     fetch("/api/orders")
       .then(async (res) => {
         if (res.status === 401) {
-          router.push("/api/auth")
+          router.push("/auth")
           return null
         }
         return res.json()

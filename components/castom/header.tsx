@@ -6,12 +6,6 @@ import { useSession, signOut, signIn } from "next-auth/react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import {
-  Menu,
   ShoppingCart,
   Home,
   PackageCheck,
@@ -19,42 +13,35 @@ import {
   LogIn,
   ShieldCheck,
 } from "lucide-react"
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog"
-import { DialogHeader } from "../ui/dialog"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { MdOutlinePersonOutline } from "react-icons/md";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import { MdOutlinePersonOutline } from "react-icons/md"
 import Image from "next/image"
 import { useSyncUserRole } from "@/hooks/useSyncUserRole"
-
+import dynamic from "next/dynamic"
+const MobileBottomNav = dynamic(() => import("@/components/castom/MobileBottomNav"), { ssr: false })
 
 export function Header() {
-  useSyncUserRole();
+  useSyncUserRole()
 
   const { data: session } = useSession()
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      setIsAdmin(session?.user.role === "ADMIN")
-    }
-    if (session) checkAdmin()
-  }, [session])
+  const isAdmin = session?.user?.role === "ADMIN"
+  const isBlocked = session?.user?.role === "BLOCK"
 
   const navItems = [
     { href: "/", label: "Каталог", icon: Home },
     { href: "/cart", label: "Корзина", icon: ShoppingCart },
     { href: "/orders", label: "Мои заказы", icon: PackageCheck, authOnly: true },
-    { href: "/admin", label: "Админ", icon: ShieldCheck, authOnly: true, adminOnly: true },
   ]
+
   const isActive = (href: string) => pathname === href
 
   return (
@@ -67,9 +54,8 @@ export function Header() {
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-4 items-center">
           {navItems.map(
-            ({ href, label, icon: Icon, authOnly, adminOnly }) =>
+            ({ href, label, icon: Icon, authOnly }) =>
               (!authOnly || session) &&
-              (!adminOnly || isAdmin) &&
               !isActive(href) && (
                 <Link
                   key={href}
@@ -81,176 +67,101 @@ export function Header() {
                 </Link>
               )
           )}
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              {
-                session?.user.image ? (
+
+          {/* Вход или профиль */}
+          {!session ? (
+            <Button
+              size="sm"
+              className="cursor-pointer text-white hover:border-neon hover:text-neon"
+              onClick={() => signIn()}
+            >
+              <LogIn className="w-4 h-4 mr-1" />
+              Войти
+            </Button>
+          ) : (
+            <>
+              <div onClick={() => setIsProfileOpen(true)} className="cursor-pointer">
+                {session?.user.image ? (
                   <Image
-                    src={session?.user.image}
-                    alt={session?.user.name || "User Avatar"}
+                    src={session.user.image}
+                    alt={session.user.name || "User Avatar"}
                     width={32}
                     height={32}
-                    className="rounded-full mr-2 object-cover hover:scale-105 transition-transform cursor-pointer"
+                    className="rounded-full object-cover hover:scale-105 transition-transform"
                   />
                 ) : (
                   <MdOutlinePersonOutline
-                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-neon transition"
-                    size={27} />
-                )
-              }
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-gray-900 text-white border-0">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {session?.user?.role === "BLOCK" && (
-                <DropdownMenuItem className="bg-red-500 hover:bg-red-600">
-                  Вы были заблокированы, <br /> обратитесь в поддержку <br /> для решения проблемы.
-                </DropdownMenuItem>
-              )}
-
-              <DropdownMenuItem className="">
-
-                {session ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="hover:text-black "
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                  >
-                    <LogOut className="w-4 h-4 mr-1" />
-                    Выйти
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    className="hover:text-black"
-                    onClick={() => signIn()}
-                  >
-                    <LogIn className="w-4 h-4 mr-1" />
-                    Войти
-                  </Button>
+                    size={27}
+                    className="text-gray-400 hover:text-neon transition"
+                  />
                 )}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </div>
 
+              <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+                <DialogContent className="bg-gray-900 text-white border border-cyan-500 shadow-lg shadow-cyan-500/20">
+                  <DialogHeader>
+                    <DialogTitle className="text-cyan-400 text-lg mb-1">Профиль</DialogTitle>
+                    <DialogDescription className="text-sm text-gray-400">
+                      Информация о вашем аккаунте
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="flex flex-col items-center gap-2 mt-4">
+                    {session.user.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt="avatar"
+                        width={64}
+                        height={64}
+                        className="rounded-full border border-cyan-400 shadow-md shadow-cyan-500/30"
+                      />
+                    ) : (
+                      <MdOutlinePersonOutline
+                        size={64}
+                        className="text-gray-500 border border-cyan-400 rounded-full p-2"
+                      />
+                    )}
+                    <p className="text-lg font-semibold">{session.user.name || "Имя не указано"}</p>
+                    <p className="text-sm text-gray-400">{session.user.email || "Email отсутствует"}</p>
+
+                    {isBlocked && (
+                      <p className="bg-red-500 text-white rounded px-3 py-2 text-center text-sm mt-3">
+                        Ваш аккаунт заблокирован. Обратитесь в поддержку.
+                      </p>
+                    )}
+
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-1 mt-3 text-cyan-400 hover:text-cyan-200 transition text-sm"
+                      >
+                        <ShieldCheck className="w-4 h-4" />
+
+                        Перейти в админ-панель
+                      </Link>
+                    )}
+
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        setIsProfileOpen(false)
+                        signOut({ callbackUrl: "/" })
+                      }}
+                      className="w-full mt-4"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Выйти
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </>
+          )}
         </nav>
 
         {/* Mobile nav */}
-        <div className="md:hidden">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-white">
-                <Menu className="w-5 h-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-gray-900 text-white border-b border-[#1a1a1a] p-5">
-              <DialogHeader className="hidden">
-                <DialogTitle>Меню</DialogTitle>
-                <DialogDescription></DialogDescription>
-              </DialogHeader>
-              Меню
-              <div className="pt-2 flex flex-col gap-4">
-                {navItems.map(
-                  ({ href, label, icon: Icon, authOnly, adminOnly }) =>
-                    (!authOnly || session) &&
-                    (!adminOnly || isAdmin) &&
-                    !isActive(href) && (
-                      <Link
-                        key={href}
-                        href={href}
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-2 text-sm hover:text-neon transition"
-                      >
-                        <Icon className="w-4 h-4" />
-                        {label}
-                      </Link>
-                    )
-                )}
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    {
-                      session?.user.image ? (
-                        <Image
-                          src={session?.user.image}
-                          alt={session?.user.name || "User Avatar"}
-                          width={32}
-                          height={32}
-                          className="rounded-full mr-2 object-cover hover:scale-105 transition-transform cursor-pointer"
-                        />
-                      ) : (
-                        <div className="flex items-center gap-1 text-white hover:text-neon transition">
-                          <MdOutlinePersonOutline
-                            className="flex items-center gap-2 text-sm hover:text-neon transition"
-                            size={20} /> Account
-                        </div>
-                      )
-                    }
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="bg-gray-900 text-white border-0">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {session?.user?.role === "BLOCK" && (
-                      <DropdownMenuItem className="bg-red-500 hover:bg-red-600">
-                        Вы были заблокированы, <br /> обратитесь в поддержку <br /> для решения проблемы.
-                      </DropdownMenuItem>
-                    )}
-
-                    <DropdownMenuItem className="">
-
-                      {session ? (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="hover:text-black "
-                          onClick={() => signOut({ callbackUrl: "/" })}
-                        >
-                          <LogOut className="w-4 h-4 mr-1" />
-                          Выйти
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          className="hover:text-black"
-                          onClick={() => signIn()}
-                        >
-                          <LogIn className="w-4 h-4 mr-1" />
-                          Войти
-                        </Button>
-                      )}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* {session ? (
-                  <Button
-                    variant="ghost"
-                    className="mt-4 text-white hover:text-neon"
-                    onClick={() => {
-                      setOpen(false)
-                      signOut({ callbackUrl: "/" })
-                    }}
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Выйти
-                  </Button>
-                ) : (
-                  <Button
-                    className="mt-4 text-white border border-white hover:border-neon hover:text-neon"
-                    onClick={() => {
-                      setOpen(false)
-                      signIn()
-                    }}
-                  >
-                    <LogIn className="w-4 h-4 mr-2" />
-                    Войти
-                  </Button>
-                )} */}
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+        <MobileBottomNav />
       </div>
     </header>
   )

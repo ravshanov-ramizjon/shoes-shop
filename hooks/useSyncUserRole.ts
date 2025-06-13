@@ -22,10 +22,7 @@ export function useSyncUserRole() {
           await update({ role: data.role });
         }
 
-        // Если пользователь больше не админ — уводим
-        if (data.role !== "admin") {
-          router.push("/");
-        }
+      
       } catch (error) {
         console.error("Ошибка при обновлении роли:", error);
       }
