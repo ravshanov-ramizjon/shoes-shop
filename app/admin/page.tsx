@@ -60,14 +60,14 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (id: string) => {
     const confirmed = await new Promise<boolean>((resolve) => {
-      toast.custom((t) => (
+      toast.custom((id: string | number) => (
         <div className="bg-gray-800 text-white p-4 rounded-lg shadow-md">
           <p>Вы уверены, что хотите удалить товар?</p>
           <div className="mt-3 flex justify-end gap-2">
             <button
               onClick={() => {
                 resolve(true)
-                toast.dismiss(t.id)
+                toast.dismiss(id)
               }}
               className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
             >
@@ -76,7 +76,7 @@ export default function AdminProductsPage() {
             <button
               onClick={() => {
                 resolve(false)
-                toast.dismiss(t.id)
+                toast.dismiss(id)
               }}
               className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
             >
@@ -85,6 +85,7 @@ export default function AdminProductsPage() {
           </div>
         </div>
       ), { duration: Infinity })
+      
     })
 
     if (!confirmed) return
