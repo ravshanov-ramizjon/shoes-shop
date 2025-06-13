@@ -45,38 +45,6 @@ export default function AdminHeader() {
     return (
         <header className="bg-gray-800 z-50  border-cyan-500 shadow-lg">
             <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
-                {/* Mobile Menu Trigger */}
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="md:hidden text-cyan-400 hover:bg-gray-800"
-                        >
-                            <MenuIcon className="w-6 h-6" />
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="bg-gray-900 text-cyan-300 p-6">
-                        <nav className="flex flex-col space-y-4">
-                            {navLinks.map(link => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="hover:text-white transition"
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
-                            <button
-                                onClick={() => signOut({ callbackUrl: '/' })}
-                                className="hover:text-white transition flex items-center gap-2"
-                            >
-                                <LogOutIcon className="w-4 h-4" /> Logout
-                            </button>
-                        </nav>
-                    </SheetContent>
-                </Sheet>
-
                 {/* Logo */}
                 <Link
                     href="/admin"
@@ -104,6 +72,38 @@ export default function AdminHeader() {
                         Logout
                     </button>
                 </nav>
+
+                  {/* Mobile Menu Trigger */}
+                  <Sheet>
+                    <SheetTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="md:hidden text-cyan-400 hover:bg-gray-800"
+                        >
+                            <MenuIcon className="w-6 h-6" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="top" className="bg-gray-900 text-cyan-300 p-6">
+                        <nav className="flex flex-col space-y-4">
+                            {navLinks.map(link => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="hover:text-white transition"
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                            <button
+                                onClick={() => signOut({ callbackUrl: '/' })}
+                                className="hover:text-white transition flex items-center gap-2"
+                            >
+                                <LogOutIcon className="w-4 h-4" /> Logout
+                            </button>
+                        </nav>
+                    </SheetContent>
+                </Sheet>
             </div>
         </header>
     )

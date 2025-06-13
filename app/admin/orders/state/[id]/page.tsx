@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/lib/authOptions"
-import { getServerSession } from "next-auth"
+import { auth } from "@/lib/authOptions"
 import { redirect } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { FiArrowRightCircle } from "react-icons/fi"
@@ -36,13 +35,13 @@ async function updateStatus(formData: FormData) {
     data: { status: nextStatus },
   })
 
-  redirect("/admin")
+  redirect("/admin/orders")
 }
 
 export default async function EditOrderPage({ params }: Props) {
   const { id } = await params
 
-  const session = await getServerSession(authOptions)
+  const session = await auth()
   if (!session?.user?.email) redirect("/")
 
   const currentUser = await prisma.user.findUnique({

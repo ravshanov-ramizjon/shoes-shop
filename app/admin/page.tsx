@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import AddProductForm from '@/components/castom/addProductForm'
 import EditProductForm from '@/components/castom/EditProductForm'
-import ProductCard from '@/components/castom/ProductRow' // новая карточка
+import ProductCard from '@/components/castom/ProductRow'
 import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useSyncUserRole } from '@/hooks/useSyncUserRole'
+import { toast } from 'sonner'
 
 type Product = {
   id: string
@@ -25,23 +25,18 @@ export default function AdminProductsPage() {
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>()
 
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
+  // ❗Включи проверку роли при необходимости
   // useEffect(() => {
-  //   if (status === "loading") return; // ждём загрузки сессии
-
-  //   if (!session || session.user.role !== "ADMIN") {
-  //     // если нет сессии или роль не admin — редирект на главную
-  //     router.replace("/");
+  //   if (status === 'loading') return
+  //   if (!session || session.user.role !== 'ADMIN') {
+  //     router.replace('/')
   //   }
-  // }, [session, status, router]);
+  // }, [session, status, router])
 
-  // if (status === "loading" || !session || session.user.role !== "ADMIN") {
-  //   return <div>Загрузка...</div>; // можно спиннер или пустой экран пока идёт проверка
-  // }
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetch('/api/products')
@@ -50,10 +45,11 @@ export default function AdminProductsPage() {
       setProducts(data)
     } catch {
       setProducts([])
+      toast.error('Ошибка загрузки продуктов')
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const handleAddClick = () => setAddModalOpen(true)
 
@@ -63,23 +59,53 @@ export default function AdminProductsPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Удалить товар?')) return
+    const confirmed = await new Promise<boolean>((resolve) => {
+      toast.custom((t) => (
+        <div className="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+          <p>Вы уверены, что хотите удалить товар?</p>
+          <div className="mt-3 flex justify-end gap-2">
+            <button
+              onClick={() => {
+                resolve(true)
+                toast.dismiss(t.id)
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+            >
+              Да
+            </button>
+            <button
+              onClick={() => {
+                resolve(false)
+                toast.dismiss(t.id)
+              }}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
+            >
+              Нет
+            </button>
+          </div>
+        </div>
+      ), { duration: Infinity })
+    })
+
+    if (!confirmed) return
+
     try {
       const res = await fetch('/api/products/delete', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       })
-      if (!res.ok) throw new Error('Ошибка удаления')
+      if (!res.ok) throw new Error()
+      toast.success('Товар удалён')
       await fetchProducts()
     } catch {
-      alert('Ошибка при удалении товара')
+      toast.error('Ошибка при удалении товара')
     }
   }
 
   useEffect(() => {
     fetchProducts()
-  }, [])
+  }, [fetchProducts])
 
   return (
     <div className="bg-gray-800 min-h-screen py-8 px-4">
@@ -91,7 +117,7 @@ export default function AdminProductsPage() {
           <Button
             onClick={handleAddClick}
             size="lg"
-            className="bg-cyan-600 text-white hover:bg-cyan-700 shadow-[0_0_10px_#06b6d4] cursor-pointer"
+            className="bg-cyan-600 text-white hover:bg-cyan-700 shadow-[0_0_10px_#06b6d4]"
           >
             Добавить товар
           </Button>
@@ -117,7 +143,6 @@ export default function AdminProductsPage() {
                 />
               ))}
             </div>
-
           </>
         )}
 

@@ -1,37 +1,19 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+// middleware.ts
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-interface WithAuthNextRequest extends NextRequest {
-  nextauth: {
-    token: {
-      role?: string;
-    };
-  };
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req })
+  const isAdminRoute = req.nextUrl.pathname.startsWith("/admin")
+
+  if (isAdminRoute && token?.role !== "ADMIN") {
+    return NextResponse.redirect(new URL("/", req.url))
+  }
+
+  return NextResponse.next()
 }
 
-export default withAuth(
-  function middleware(req: NextRequest) {
-    const token = (req as WithAuthNextRequest).nextauth?.token;
-    const role = token?.role;
-
-    // если пользователь не админ, редиректим
-    if (req.nextUrl.pathname.startsWith("/admin") && role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
-
-    return NextResponse.next();
-  },
-  {
-    pages: {
-      signIn: "/auth",
-    },
-    callbacks: {
-      authorized: ({ token }) => !!token, // пускаем, только если токен есть
-    },
-  }
-);
-
 export const config = {
-  matcher: ["/admin/:path*",],
-};
+  matcher: ["/admin/:path*"],
+}

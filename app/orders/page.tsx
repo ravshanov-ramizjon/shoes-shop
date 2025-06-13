@@ -40,7 +40,7 @@ export default function OrdersPage() {
     fetch("/api/orders")
       .then(async (res) => {
         if (res.status === 401) {
-          router.push("/api/auth/signin")
+          router.push("/api/auth")
           return null
         }
         return res.json()
@@ -103,19 +103,21 @@ export default function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <main className="bg-gray-900 p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-white">
-        <h1 className="text-3xl font-bold text-center text-cyan-400">
-          Мои заказы
-        </h1>
-        <p className="text-center text-gray-400 mt-8 text-lg">
-          У вас ещё нет заказов.
-        </p>
-      </main>
+      <div className="bg-gray-900 h-screen">
+        <main className="bg-gray-900 h-screen p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-white">
+          <h1 className="text-3xl font-bold text-center text-cyan-400">
+            Мои заказы
+          </h1>
+          <p className="text-center text-gray-400 mt-8 text-lg">
+            У вас ещё нет заказов.
+          </p>
+        </main>
+      </div>
     )
   }
 
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="bg-gray-900 h-screen">
       <main className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-white">
         <h1 className="text-3xl font-bold text-center sm:text-left text-cyan-400">
           Мои заказы
@@ -146,10 +148,10 @@ export default function OrdersPage() {
                     {order.status === "PENDING"
                       ? "В ожидании"
                       : order.status === "PROCESSED"
-                      ? "Обрабатывается"
-                      : order.status === "COMPLETED"
-                      ? "Завершён"
-                      : "Отменён"}
+                        ? "Обрабатывается"
+                        : order.status === "COMPLETED"
+                          ? "Завершён"
+                          : "Отменён"}
                   </span>
                 </div>
                 {order.status === "CANCELED" && order.canceledAt && (
@@ -161,23 +163,23 @@ export default function OrdersPage() {
               </div>
             </div>
 
-         
-              <div className="space-y-2 text-sm">
-                {!order.items || order.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex justify-between items-center border-b border-zinc-700 pb-1"
-                  >
-                    <span className="truncate max-w-[70%] text-gray-300">
-                      {item.name} × {item.quantity}
-                    </span>
-                    <span className="font-semibold text-cyan-300">
-                      {item.price * item.quantity} сум
-                    </span>
-                  </div>
-                ))}
-              </div>
-            
+
+            <div className="space-y-2 text-sm">
+              {!order.items || order.items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center border-b border-zinc-700 pb-1"
+                >
+                  <span className="truncate max-w-[70%] text-gray-300">
+                    {item.name} × {item.quantity}
+                  </span>
+                  <span className="font-semibold text-cyan-300">
+                    {item.price * item.quantity} сум
+                  </span>
+                </div>
+              ))}
+            </div>
+
 
             <div className="flex items-center justify-between pt-4">
               <p className="text-cyan-400 font-bold text-lg">

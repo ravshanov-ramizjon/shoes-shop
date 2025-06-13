@@ -39,7 +39,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const handleBuy = async (e: React.MouseEvent) => {
     e.stopPropagation()
 
-    if (!session?.user?.email) {
+    if (!session?.user.id) {
       toast.error("Пожалуйста, зарегистрируйтес или войдите в свой аккаунт для покупки")
       return
     }
@@ -114,7 +114,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           variant="default"
           onClick={handleBuy}
           disabled={isInCart}
-          className={`bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_cyan] ${
+          className={`bg-cyan-600 cursor-pointer hover:bg-cyan-500 shadow-[0_0_15px_cyan] ${
             isInCart
               ? "opacity-60 cursor-not-allowed"
               : "hover:shadow-[0_0_25px_cyan] transition"

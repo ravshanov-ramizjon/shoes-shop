@@ -41,12 +41,10 @@ export function Header() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
-  console.log("Is admin:", session?.user.role)
 
   useEffect(() => {
     const checkAdmin = async () => {
       setIsAdmin(session?.user.role === "ADMIN")
-      console.log("User role:", session?.user.role)
     }
     if (session) checkAdmin()
   }, [session])
@@ -57,7 +55,6 @@ export function Header() {
     { href: "/orders", label: "Мои заказы", icon: PackageCheck, authOnly: true },
     { href: "/admin", label: "Админ", icon: ShieldCheck, authOnly: true, adminOnly: true },
   ]
-  console.log("Session in header:", session?.user.image)
   const isActive = (href: string) => pathname === href
 
   return (

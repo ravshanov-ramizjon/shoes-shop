@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/authOptions"
+import { auth } from "@/lib/authOptions"
 import { prisma } from "@/lib/prisma"
 import {
   FiUser,
@@ -15,7 +14,7 @@ import Link from "next/link"
 type OrderStatus = "PENDING" | "PROCESSED" | "COMPLETED"
 
 export default async function AdminOrdersPage() {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
 
   if (!session?.user?.email) {
     redirect("/")
@@ -95,7 +94,7 @@ export default async function AdminOrdersPage() {
                 </div>
 
                 <Link
-                  href={`/admin/orders/${order.id}`}
+                  href={`/admin/orders/state/${order.id}`}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg transition shadow-[0_0_10px_cyan] hover:shadow-[0_0_15px_cyan]"
                 >
                   Изменить статус <FiArrowRightCircle />

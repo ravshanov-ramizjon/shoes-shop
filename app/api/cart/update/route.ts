@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/authOptions"
+import { auth } from "@/lib/authOptions"
 
 export async function POST(req: NextRequest) {
   const { items } = await req.json()
-  console.log("User:", items)
 
 
   if (!Array.isArray(items)) {
     return NextResponse.json({ error: "Invalid data" }, { status: 400 })
   }
 
-  const session = await getServerSession(authOptions)
+  const session = await auth()
 
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

@@ -8,58 +8,91 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String?
-  email    String?   @unique
-  password String?
-  emailVerified DateTime?
-  image    String?
+  id             Int       @id @default(autoincrement())
+  name           String?
+  email          String?   @unique
+  blog             String?   @default(uuid())
+  password       String?
+  emailVerified  DateTime?
+  image          String?
   hashedPassword String?
+  githubId       String?    @unique
+  googleId       String?    @unique
 
-  role     Role      @default(USER)
-  orders   Order[]
-  cartItems CartItem[]
+  role           Role      @default(USER)
+  orders         Order[]
+  cartItems      CartItem[]
+  accounts       Account[]
+  sessions       Session[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@map("users")
 }
 
+model Account {
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?   @db.Text
+  access_token      String?   @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?   @db.Text
+  session_state     String?
+
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           Int       @id @default(autoincrement())
+  sessionToken String    @unique
+  userId       Int
+  expires      DateTime
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
 model Product {
-  id       String    @id @default(uuid())
-  name     String
+  id          String    @id @default(uuid())
+  name        String
   description String
-  price    Float
-  image    String
-  category Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+  price       Float
+  image       String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
 
-  orderItems OrderItem[]
-
-  cartItems CartItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("products")
 }
 
 model CartItem {
-  id        String   @id @default(uuid())     // уникальный ID, автоинкремент
-  userId    Int                               // внешний ключ на пользователя
-  productId String                           // внешний ключ на продукт
-  name      String                           // имя продукта (дублируется, чтобы не делать join)
-  image     String                           // изображение продукта (дублируется)
-  price     Float                            // цена (дублируется)
-  quantity  Int                              // количество
+  id        String   @id @default(uuid())
+  userId    Int
+  productId String
+  name      String
+  image     String
+  price     Float
+  quantity  Int
 
-  User      User     @relation(fields: [userId], references: [id])       // связь с User
-  Product   Product  @relation(fields: [productId], references: [id])    // связь с Product
+  User      User     @relation(fields: [userId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id])
 
-  createdAt DateTime @default(now())  // дата создания
+  createdAt DateTime @default(now())
 }
-
 
 model Category {
   id       String   @id @default(uuid())
@@ -70,18 +103,17 @@ model Category {
 }
 
 model Order {
-  id        String    @id @default(uuid())
-  name      String
-  phone     String
-  address   String
-  status    OrderStatus  @default(PENDING)
-  paymentMethod    PaymentMethod  @default(cash)
+  id            String        @id @default(uuid())
+  name          String
+  phone         String
+  address       String
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod @default(cash)
 
-  user      User?        @relation(fields: [userId], references: [id])
-  userId    Int      
-
-  items     OrderItem[]
-  createdAt DateTime     @default(now())
+  user          User?         @relation(fields: [userId], references: [id])
+  userId        Int
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
 
   @@map("orders")
 }
@@ -90,10 +122,8 @@ model OrderItem {
   id        String   @id @default(uuid())
   order     Order    @relation(fields: [orderId], references: [id])
   orderId   String
-
   product   Product  @relation(fields: [productId], references: [id])
   productId String
-
   name      String
   price     Int
   quantity  Int

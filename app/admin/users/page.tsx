@@ -1,12 +1,11 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/authOptions"
+import { auth } from "@/lib/authOptions"
 import { prisma } from "@/lib/prisma"
 import UserRow from "@/components/castom/UserRow"
 import { FiUsers } from "react-icons/fi"
 import { redirect } from "next/navigation"
 
 export default async function AdminUsersPage() {
-  const session = await getServerSession(authOptions)
+  const session = await auth()
 
   if (!session || session.user.role !== "ADMIN") {
     redirect("/");

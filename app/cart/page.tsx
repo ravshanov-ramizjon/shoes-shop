@@ -337,7 +337,7 @@ export default function CartPage() {
                     <TooltipTrigger asChild>
                       <Button
                         variant="outline"
-                        disabled
+                        
                         className="bg-zinc-800 text-white cursor-not-allowed opacity-60"
                       >
                         <CreditCard className="mr-2 h-5 w-5" />
