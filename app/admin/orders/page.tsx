@@ -10,11 +10,17 @@ import {
   FiCalendar,
 } from "react-icons/fi"
 import Link from "next/link"
+export const metadata = {
+  title: 'Админка — Все заказы | ShoesStore',
+  description: 'Просмотр и управление всеми заказами клиентов.',
+  keywords: 'админка заказы, все заказы, управление заказами, заказы клиентов, stepstyle admin orders',
+  robots: 'noindex, nofollow',
+}
 
 type OrderStatus = "PENDING" | "PROCESSED" | "COMPLETED"
 
 export default async function AdminOrdersPage() {
-  const session = await auth()
+  const session = await auth() 
 
   if (!session?.user?.email) {
     redirect("/")

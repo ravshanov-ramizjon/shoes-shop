@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/tooltip"
 import { toast } from "sonner"
 import Link from "next/link"
+import { useMeta } from "@/hooks/useMeta"
 
 export default function CartPage() {
   const { data: session } = useSession()
@@ -129,7 +130,11 @@ export default function CartPage() {
       toast.error("Не удалось оформить заказ. Попробуйте позже.")
     }
   }
-
+  useMeta({
+    title: 'ShoesStore — Корзина',
+    description: 'Ваши выбранные товары в интернет-магазине ShoesStore. Перейдите к оформлению заказа.',
+    keywords: 'корзина, обувь, купить обувь, оформление заказа, модная обувь, интернет-магазин'
+  })
   return (
     <div className="bg-gray-900">
       <main className="min-h-screen p-6 max-w-5xl mx-auto space-y-8 rounded-lg shadow-lg text-cyan-300">
@@ -337,7 +342,7 @@ export default function CartPage() {
                     <TooltipTrigger asChild>
                       <Button
                         variant="outline"
-                        
+
                         className="bg-zinc-800 text-white cursor-not-allowed opacity-60"
                       >
                         <CreditCard className="mr-2 h-5 w-5" />

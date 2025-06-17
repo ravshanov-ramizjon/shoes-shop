@@ -3,9 +3,17 @@ import { prisma } from "@/lib/prisma"
 import UserRow from "@/components/castom/UserRow"
 import { FiUsers } from "react-icons/fi"
 import { redirect } from "next/navigation"
+export const metadata = {
+  title: 'Админка — Пользователи | ShoesStore',
+  description: 'Управление зарегистрированными пользователями магазина.',
+  keywords: 'админка пользователи, управление пользователями, администратор users, удалить пользователя, изменить данные пользователя',
+  robots: 'noindex, nofollow',
+}
 
 export default async function AdminUsersPage() {
   const session = await auth()
+ 
+  
 
   if (!session || session.user.role !== "ADMIN") {
     redirect("/");

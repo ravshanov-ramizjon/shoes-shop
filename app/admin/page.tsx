@@ -5,9 +5,8 @@ import AddProductForm from '@/components/castom/addProductForm'
 import EditProductForm from '@/components/castom/EditProductForm'
 import ProductCard from '@/components/castom/ProductRow'
 import { Button } from '@/components/ui/button'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { useMeta } from '@/hooks/useMeta'
 
 type Product = {
   id: string
@@ -24,17 +23,10 @@ export default function AdminProductsPage() {
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>()
-
-  const { data: session, status } = useSession()
-  const router = useRouter()
-
-  // ❗Включи проверку роли при необходимости
-  // useEffect(() => {
-  //   if (status === 'loading') return
-  //   if (!session || session.user.role !== 'ADMIN') {
-  //     router.replace('/')
-  //   }
-  // }, [session, status, router])
+  useMeta({
+    title: 'ShoesStore — Админка: Товары',
+    description: 'Панель управления товарами магазина.'
+  })
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)

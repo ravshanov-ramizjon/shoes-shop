@@ -21,7 +21,6 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
-// ✅ Обновление статуса заказа
 async function updateStatus(formData: FormData) {
   "use server"
 
@@ -36,6 +35,13 @@ async function updateStatus(formData: FormData) {
   })
 
   redirect("/admin/orders")
+}
+
+export const metadata = {
+  title: 'ShoesStore — Изменение статуса заказа',
+  description: 'Редактирование и обновление статуса заказов клиентов в панели администратора.',
+  keywords: 'изменение заказа, статус заказа, админка заказ, обновить статус заказа, stepstyle заказ статус',
+  robots: 'noindex, nofollow',
 }
 
 export default async function EditOrderPage({ params }: Props) {

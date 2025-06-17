@@ -14,6 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Icons } from "@/components/castom/icons"
+import { useMeta } from "@/hooks/useMeta"
+
 
 export default function AuthPage() {
   const router = useRouter()
@@ -63,9 +65,14 @@ export default function AuthPage() {
       }
     }
   }
-
+  useMeta({
+    title: 'ShoesStore — LOGIN',
+    description: 'Войдите в уже существующий аккаунт или регистрируйте новый.',
+    keywords: 'обувь, модная обувь, купить обувь, войти в обувной маркет, регистрация обувь маркет'
+  })
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
+     
       <Card className="w-full max-w-md bg-gray-900 border border-cyan-400 text-cyan-300 shadow-[0_0_20px_cyan] transition-shadow hover:shadow-[0_0_25px_cyan]">
         <CardHeader>
           <CardTitle className="text-2xl text-center font-bold drop-shadow-[0_0_8px_cyan]">

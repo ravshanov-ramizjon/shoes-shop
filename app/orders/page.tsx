@@ -11,7 +11,7 @@ import {
   FiX,
 } from "react-icons/fi"
 import CancelOrderDialog from "@/components/castom/CancelOrderDialog"
-
+import { useMeta } from "@/hooks/useMeta"
 
 interface OrderItem {
   id: string
@@ -35,6 +35,11 @@ interface Order {
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[] | null>(null)
   const router = useRouter()
+  useMeta({
+    title: 'ShoesStore — Мои заказы',
+    description: 'Просматривайте историю своих заказов в интернет-магазине ShoesStore.',
+    keywords: 'мои заказы, история заказов, интернет-магазин обуви, ShoesStore'
+  })
 
   useEffect(() => {
     fetch("/api/orders")
@@ -115,7 +120,7 @@ export default function OrdersPage() {
       </div>
     )
   }
-
+ 
   return (
     <div className="bg-gray-900 h-screen">
       <main className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-white">
