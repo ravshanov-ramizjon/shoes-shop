@@ -110,6 +110,10 @@ export const metadata = {
     description: 'Качественная и стильная обувь для всей семьи.',
     images: ['https://www.web-site-dev.uz/og-image.jpg'],
   },
+  other: {
+    'google-site-verification': 'bLdh4XA_Jmv9KBlGsbJwItsetpeKyRRnKQmNKOSAbic',
+    "yandex-verification": '28b66dcc6a86e475'
+  },
 }
 
 export default async function Page() {

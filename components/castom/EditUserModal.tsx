@@ -66,7 +66,7 @@ export default function EditUserModal({ user, onClose, onSave }: Props) {
           <div className="relative">
             <Input
               className="bg-black text-white border-cyan-600 focus:ring-cyan-400 pr-10"
-              type={showPassword ? "text" : "password"} // 👈 динамичный тип
+              type={showPassword ? "text" : "password"}
               placeholder="Новый пароль"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
