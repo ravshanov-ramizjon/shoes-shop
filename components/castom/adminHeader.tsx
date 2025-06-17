@@ -79,7 +79,7 @@ export default function AdminHeader() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden text-cyan-400 hover:bg-gray-800"
+              className="md:hidden text-cyan-400 hover:bg-gray-800 hover:text-white cursor-pointer"
             >
               <MenuIcon className="w-6 h-6" />
             </Button>

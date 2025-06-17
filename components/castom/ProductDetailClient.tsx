@@ -92,7 +92,7 @@ export default function ProductDetailClient({
 
   return (
     <div className="bg-gray-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-5 space-y-10 text-cyan-300">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-20 space-y-10 text-cyan-300">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -172,7 +172,7 @@ export default function ProductDetailClient({
                       href={`/product/${item.id}`}
                       className="w-[240px] sm:w-[280px] flex-shrink-0"
                     >
-                      <Card className="bg-gray-800 border border-cyan-500 text-cyan-300 hover:shadow-[0_0_15px_cyan] transition-shadow duration-300">
+                      <Card className="bg-gray-800 border border-cyan-500 text-cyan-300 hover:shadow-[0_0_15px_cyan] transition-shadow duration-300 p-0">
                         <CardHeader className="relative h-40 overflow-hidden rounded-t-xl p-0">
                           <Image
                             src={item.image}

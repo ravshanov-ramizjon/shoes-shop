@@ -7,7 +7,6 @@ import { SyncCart } from "@/components/castom/SyncCart"
 import { Toaster } from "@/components/ui/sonner"
 import { usePathname } from 'next/navigation'
 
-
 const inter = Inter({ subsets: ["latin"] })
 
 
