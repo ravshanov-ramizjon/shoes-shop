@@ -82,7 +82,7 @@ export default function MobileBottomNav() {
         ) : (
           <button
             onClick={() => signIn()}
-            className="flex flex-col items-center text-xs text-gray-400 hover:text-cyan-300 transition"
+            className="flex flex-col items-center text-xs text-gray-400 hover:text-cyan-300 transition cursor-pointer"
           >
             <LogIn className="w-5 h-5 mb-1" />
             Войти
