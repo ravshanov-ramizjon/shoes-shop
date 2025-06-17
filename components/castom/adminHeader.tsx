@@ -2,7 +2,15 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { MenuIcon, LogOutIcon } from 'lucide-react'
+import {
+  MenuIcon,
+  LogOutIcon,
+  PackageCheck,
+  ShoppingCart,
+  Users,
+  Store,
+  LayoutDashboard,
+} from 'lucide-react'
 import {
   Sheet,
   SheetTrigger,
@@ -23,20 +31,20 @@ export default function AdminHeader() {
   const getNavLinks = () => {
     if (isUsers) {
       return [
-        { href: '/admin', label: 'Товары' },
-        { href: '/admin/orders', label: 'Все заказы' },
+        { href: '/admin', label: 'Товары', icon: <PackageCheck size={16} /> },
+        { href: '/admin/orders', label: 'Все заказы', icon: <ShoppingCart size={16} /> },
       ]
     }
     if (isOrders) {
       return [
-        { href: '/admin/users', label: 'Пользователи' },
-        { href: '/admin', label: 'Товары' },
+        { href: '/admin/users', label: 'Пользователи', icon: <Users size={16} /> },
+        { href: '/admin', label: 'Товары', icon: <PackageCheck size={16} /> },
       ]
     }
     return [
-      { href: '/', label: 'Вернуться в магазин' },
-      { href: '/admin/users', label: 'Пользователи' },
-      { href: '/admin/orders', label: 'Все заказы' },
+      { href: '/', label: 'Магазин', icon: <Store size={16} /> },
+      { href: '/admin/users', label: 'Пользователи', icon: <Users size={16} /> },
+      { href: '/admin/orders', label: 'Все заказы', icon: <ShoppingCart size={16} /> },
     ]
   }
 
@@ -48,8 +56,9 @@ export default function AdminHeader() {
         {/* Logo */}
         <Link
           href="/admin"
-          className="text-2xl font-bold tracking-widest text-cyan-400 hover:text-neon transition-all duration-200"
+          className="text-2xl font-bold tracking-widest text-cyan-400 hover:text-neon transition-all duration-200 flex items-center gap-2"
         >
+          <LayoutDashboard className="w-6 h-6" />
           Admin Panel
         </Link>
 
@@ -59,8 +68,9 @@ export default function AdminHeader() {
             <Link
               key={link.href}
               href={link.href}
-              className="font-bold text-cyan-400 hover:text-white transition duration-200"
+              className="font-bold text-cyan-400 hover:text-white transition duration-200 flex items-center gap-1"
             >
+              {link.icon}
               {link.label}
             </Link>
           ))}
@@ -94,8 +104,9 @@ export default function AdminHeader() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="hover:text-white transition"
+                  className="hover:text-white transition flex items-center gap-2"
                 >
+                  {link.icon}
                   {link.label}
                 </Link>
               ))}
