@@ -89,7 +89,7 @@ model CartItem {
   quantity  Int
 
   User      User     @relation(fields: [userId], references: [id])
-  Product   Product  @relation(fields: [productId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
@@ -122,7 +122,7 @@ model OrderItem {
   id        String   @id @default(uuid())
   order     Order    @relation(fields: [orderId], references: [id])
   orderId   String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
   name      String
   price     Int

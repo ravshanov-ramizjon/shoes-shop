@@ -99,9 +99,9 @@ export default function AdminProductsPage() {
       if (!res.ok) throw new Error()
       toast.success('Товар удалён')
       await fetchProducts()
-    } catch {
+     }  catch {
       toast.error('Ошибка при удалении товара')
-    }
+     }
   }
 
   useEffect(() => {
