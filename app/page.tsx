@@ -112,7 +112,7 @@ export const metadata = {
   },
   other: {
     'google-site-verification': 'bLdh4XA_Jmv9KBlGsbJwItsetpeKyRRnKQmNKOSAbic',
-    "yandex-verification": '28b66dcc6a86e475'
+    "yandex-verification": "28b66dcc6a86e475"
   },
 }
 
