@@ -123,7 +123,7 @@ export default function OrdersPage() {
  
   return (
     <div className="bg-gray-900 h-screen">
-      <main className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 text-white">
+      <main className="p-4 pb-20 sm:p-6 max-w-4xl mx-auto space-y-6 text-white">
         <h1 className="text-3xl font-bold text-center sm:text-left text-cyan-400">
           Мои заказы
         </h1>
