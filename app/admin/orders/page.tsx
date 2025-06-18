@@ -10,6 +10,7 @@ import {
   FiCalendar,
 } from "react-icons/fi"
 import Link from "next/link"
+import { Wallet } from "lucide-react"
 export const metadata = {
   title: 'Админка — Все заказы | ShoesStore',
   description: 'Просмотр и управление всеми заказами клиентов.',
@@ -20,7 +21,7 @@ export const metadata = {
 type OrderStatus = "PENDING" | "PROCESSED" | "COMPLETED"
 
 export default async function AdminOrdersPage() {
-  const session = await auth() 
+  const session = await auth()
 
   if (!session?.user?.email) {
     redirect("/")
@@ -54,21 +55,21 @@ export default async function AdminOrdersPage() {
         </h1>
 
         {orders.length === 0 ? (
-         <div className="flex flex-col items-center justify-center mt-24 animate-fade-in">
-         <div className="text-6xl text-cyan-400 drop-shadow-[0_0_20px_cyan] animate-pulse mb-4">
-           <FiBox />
-         </div>
-         <p className="text-2xl text-center text-cyan-300 drop-shadow-[0_0_6px_cyan] font-semibold mb-6">
-           Нет заказов<br />
-           <span className="text-base text-cyan-500">Все товары ещё ждут своих покупателей</span>
-         </p>
-         <Link
-           href="/admin/orders"
-           className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl shadow-[0_0_15px_cyan] hover:shadow-[0_0_20px_cyan] transition duration-300 text-sm font-medium"
-         >
-           🔄 Обновить
-         </Link>
-       </div>
+          <div className="flex flex-col items-center justify-center mt-24 animate-fade-in">
+            <div className="text-6xl text-cyan-400 drop-shadow-[0_0_20px_cyan] animate-pulse mb-4">
+              <FiBox />
+            </div>
+            <p className="text-2xl text-center text-cyan-300 drop-shadow-[0_0_6px_cyan] font-semibold mb-6">
+              Нет заказов<br />
+              <span className="text-base text-cyan-500">Все товары ещё ждут своих покупателей</span>
+            </p>
+            <Link
+              href="/admin/orders"
+              className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl shadow-[0_0_15px_cyan] hover:shadow-[0_0_20px_cyan] transition duration-300 text-sm font-medium"
+            >
+              🔄 Обновить
+            </Link>
+          </div>
         ) : (
           orders.map((order) => (
             <div
@@ -122,6 +123,13 @@ export default async function AdminOrdersPage() {
                   className="flex items-center gap-2 hover:text-white transition"
                 >
                   <FiMail /> {order.user?.email ?? "Гость"}
+                </Link>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2 hover:text-white transition"
+                >
+                  <Wallet className="mr-2 h-5 w-5" /> 
+                  Наличные
                 </Link>
               </div>
 
