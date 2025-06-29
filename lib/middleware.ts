@@ -5,6 +5,11 @@ import { getToken } from "next-auth/jwt"
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req })
+
+  if (!token) {
+    return NextResponse.redirect(new URL("/auth", req.url))
+  }
+
   const isAdminRoute = req.nextUrl.pathname.startsWith("/admin")
 
   if (isAdminRoute && token?.role !== "ADMIN") {

@@ -2,11 +2,9 @@ export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/prisma";
 import { HomePage } from "@/components/castom/home";
 
-// Интерфейсы
 interface Category {
   id: string;
   name: string;
-  // Добавь другие поля, если они есть в таблице Category
 }
 
 interface Product {
