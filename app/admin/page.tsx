@@ -7,6 +7,8 @@ import ProductCard from '@/components/castom/ProductRow'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useMeta } from '@/hooks/useMeta'
+import { redirect } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 type Product = {
   id: string
@@ -23,10 +25,16 @@ export default function AdminProductsPage() {
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>()
+  const { data: session } = useSession()
+  
   useMeta({
     title: 'ShoesStore — Админка: Товары',
     description: 'Панель управления товарами магазина.'
   })
+  console.log("Session:", session)
+  if (!session) {
+    redirect("/")
+  }
 
   const fetchProducts = useCallback(async () => {
     setLoading(true)
